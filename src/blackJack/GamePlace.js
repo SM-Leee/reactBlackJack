@@ -57,7 +57,7 @@ const GamePlace = () => {
             }
             sumNum+= Number(cardRank);
         }
-        if(player === '2'){
+        if(player === '2' && ARankCardCount !== 0){
             if(sumNum < 12 - ARankCardCount){
                 sumNum = sumNum + 11 + (ARankCardCount - 1);
             } else {
