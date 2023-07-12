@@ -16,7 +16,7 @@ const GamePlace = () => {
     //GameStart Button
     const onHandleGameStart = () => {
         const cardShuffle = playerCardDraw(4);
-        setWinPlayer(['You are playing.', ''])
+        setWinPlayer(['You are playing......', ''])
         setOnePlyaer([...onePlayer, cardShuffle[0], cardShuffle[1]]);
         setTwoPlyaer([...twoPlayer, cardShuffle[2], cardShuffle[3]]);
         setButtonBool([true, false, false]);
@@ -114,7 +114,6 @@ const GamePlace = () => {
         }
     }, [twoPlayer]);
     useEffect(() => {
-        console.log(twoPlayer)
         let twoPlayerCount = countCardsRank('2', twoPlayer);
         let onePlayerList = [...onePlayer];
         let stayBool = true;
