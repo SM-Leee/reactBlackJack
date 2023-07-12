@@ -6,7 +6,7 @@ import './CardList/buttonCss.css';
 const GamePlace = () => {
     const suits = ['♠', '♣', '♥', '♦'];
     const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-    const [WinPlayer, setWinPlayer] = useState('게임을 시작해 주세요.');
+    const [WinPlayer, setWinPlayer] = useState(['게임을 시작해 주세요.', '']);
     const [buttonBool, setButtonBool] = useState([false, true, true]);
     const [rank, setRank] = useState([0, 0]);
     const [onePlayer, setOnePlyaer] = useState([]);
@@ -15,7 +15,7 @@ const GamePlace = () => {
 
     const onHandleGameStart = () => {
         const cardShuffle = playerCardShare(4);
-        setWinPlayer('게임중입니다.')
+        setWinPlayer(['게임중입니다.', ''])
         setOnePlyaer([...onePlayer, cardShuffle[0], cardShuffle[1]]);
         setTwoPlyaer([...twoPlayer, cardShuffle[2], cardShuffle[3]]);
         setButtonBool([true, false, false]);
@@ -28,7 +28,7 @@ const GamePlace = () => {
         setButtonBool([true, true, true]);
     }
     const onHandleReset = () => {
-        setWinPlayer('게임을 시작해 주세요.')
+        setWinPlayer(['게임을 시작해 주세요.', ''])
         setButtonBool([false, true, true])
         setRank([0, 0]);
         setOnePlyaer([]);
@@ -88,10 +88,7 @@ const GamePlace = () => {
     }
     const GameOver = (message) => {
         setButtonBool([true, true, true]);
-        setWinPlayer(message);
-        const oneCount = winPlayer('1', onePlayer);
-        const twoCount = winPlayer('2', twoPlayer);
-        setRank([oneCount, twoCount]);
+        setWinPlayer([message, 'GameOver']);
     }
     useEffect(() => {
         const twoWinPlayerCount = winPlayer('2', twoPlayer);
@@ -99,18 +96,23 @@ const GamePlace = () => {
             setOnePlyaer([...onePlayer, ...playerCardShare(1)]);
         } else if(twoWinPlayerCount > 21){
             GameOver('1 Player 우승')
+            const oneCount = winPlayer('1', onePlayer);
+            setRank([oneCount, twoWinPlayerCount]);
         }
     }, [twoPlayer]);
     useEffect(() => {
         let twoPlayerCount = winPlayer('2', twoPlayer);
         let onePlayerList = [...onePlayer];
-        if(twoPlayer.length > 1){
+        let stayBool = true;
+        if(WinPlayer[1] === 'GameOver'){
+            const oneCount = winPlayer('1', onePlayer);
+            setRank([oneCount, twoPlayerCount]);
+        }
+        if(twoPlayer.length > 1 && WinPlayer[1] !== 'GameOver'){
             if(twoPlayerCount === 21){
-                //setOnePlyaer([...onePlayer, ...playerCardShare(1)]);
+                stayBool = false;
                 let boolWin = true;
                 while(boolWin){
-                    let playerCardShareAdd = playerCardShare(1);
-                    onePlayerList = [...onePlayerList, ...playerCardShareAdd];
                     let winCount = winPlayer('1', onePlayerList);
                     if(winCount === 21){
                         GameOver('무승부')
@@ -118,32 +120,36 @@ const GamePlace = () => {
                     }else if(winCount > 21){
                         GameOver('2 Player 우승')
                         boolWin = false;
+                    } else {
+                        let playerCardShareAdd = playerCardShare(1);
+                        onePlayerList = [...onePlayerList, ...playerCardShareAdd];
                     }
                 }
-                
+                setOnePlyaer(onePlayerList);
             }
-            if(buttonBool[2]){
-                let boolWin = true;
-                while(boolWin){
+            if(buttonBool[2] && stayBool){
+                let boolWin2 = true;
+                while(boolWin2){
                     let winCount = winPlayer('1', onePlayerList);
                     if(winCount === 21 && twoPlayerCount === 21){
                         GameOver('무승부')
-                        boolWin = false;
+                        boolWin2 = false;
                     }else if(winCount > 21 || (winCount > 16 && winCount < twoPlayerCount)){
                         GameOver('2 Player 우승')
-                        boolWin = false;
+                        boolWin2 = false;
                     }else if((winCount > 16 && winCount > twoPlayerCount) || winCount === 21){
                         GameOver('1 Player 우승')
-                        boolWin = false;
+                        boolWin2 = false;
                     } else if(winCount === twoPlayerCount && winCount > 16){
                         GameOver('무승부')
-                        boolWin = false;
+                        boolWin2 = false;
                     }
-                    if(boolWin){
+                    if(boolWin2){
                         let playerCardShareAdd = playerCardShare(1);
                         onePlayerList = [...onePlayerList, ...playerCardShareAdd];
                     }        
                 }
+                setOnePlyaer(onePlayerList);
             }
         }
     },[onePlayer])
@@ -156,7 +162,7 @@ const GamePlace = () => {
     return(
         <>
             <hr/>
-            <h1>{WinPlayer}</h1>
+            <h1>{WinPlayer[0]}</h1>
             <hr/>
             <h1>1 Player : {rank[0]}</h1> 
             <CardPlayer player={onePlayer}/>
