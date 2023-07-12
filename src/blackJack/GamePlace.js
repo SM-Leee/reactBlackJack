@@ -6,7 +6,7 @@ import './CardList/buttonCss.css';
 const GamePlace = () => {
     const suits = ['♠', '♣', '♥', '♦'];
     const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-    const [WinPlayer, setWinPlayer] = useState('');
+    const [WinPlayer, setWinPlayer] = useState('게임을 시작해 주세요.');
     const [buttonBool, setButtonBool] = useState([false, true, true]);
     const [rank, setRank] = useState([0, 0]);
     const [onePlayer, setOnePlyaer] = useState([]);
@@ -15,6 +15,7 @@ const GamePlace = () => {
 
     const onHandleGameStart = () => {
         const cardShuffle = playerCardShare(4);
+        setWinPlayer('게임중입니다.')
         setOnePlyaer([...onePlayer, cardShuffle[0], cardShuffle[1]]);
         setTwoPlyaer([...twoPlayer, cardShuffle[2], cardShuffle[3]]);
         setButtonBool([true, false, false]);
@@ -27,9 +28,9 @@ const GamePlace = () => {
         setButtonBool([true, true, true]);
     }
     const onHandleReset = () => {
-        setWinPlayer('')
+        setWinPlayer('게임을 시작해 주세요.')
         setButtonBool([false, true, true])
-        setRank([]);
+        setRank([0, 0]);
         setOnePlyaer([]);
         setTwoPlyaer([]);
         setBusterCard([]);
@@ -93,7 +94,6 @@ const GamePlace = () => {
         setRank([oneCount, twoCount]);
     }
     useEffect(() => {
-        console.log(twoPlayer);
         const twoWinPlayerCount = winPlayer('2', twoPlayer);
         if(twoWinPlayerCount === 21){
             setOnePlyaer([...onePlayer, ...playerCardShare(1)]);
@@ -104,7 +104,6 @@ const GamePlace = () => {
     useEffect(() => {
         let twoPlayerCount = winPlayer('2', twoPlayer);
         let onePlayerList = [...onePlayer];
-        console.log(onePlayer)
         if(twoPlayer.length > 1){
             if(twoPlayerCount === 21){
                 //setOnePlyaer([...onePlayer, ...playerCardShare(1)]);
@@ -124,7 +123,6 @@ const GamePlace = () => {
                 
             }
             if(buttonBool[2]){
-                console.log(1111);
                 let boolWin = true;
                 while(boolWin){
                     let winCount = winPlayer('1', onePlayerList);
@@ -157,7 +155,6 @@ const GamePlace = () => {
     }, [onePlayer, twoPlayer])
     return(
         <>
-            <button className={`cardButton ${buttonBool[0] ? 'disabled' : ''}`} disabled={buttonBool[0]} onClick={onHandleGameStart}>Game Start</button>
             <hr/>
             <h1>{WinPlayer}</h1>
             <hr/>
@@ -167,6 +164,7 @@ const GamePlace = () => {
             <h1>2 Player : {rank[1]}</h1> 
             <CardPlayer player={twoPlayer}/>
             <hr/>
+            <button className={`cardButton ${buttonBool[0] ? 'disabled' : ''}`} disabled={buttonBool[0]} onClick={onHandleGameStart}>Game Start</button>
             <button className={`cardButton ${buttonBool[1] ? 'disabled' : ''}`} disabled={buttonBool[1]} onClick={onHandleCardDraw}>Drawing</button>
             <button className={`cardButton ${buttonBool[2] ? 'disabled' : ''}`} disabled={buttonBool[2]} onClick={onHandleStay}>Stay</button>
             <button className={`cardButton`} onClick = {onHandleReset}>reset</button>
