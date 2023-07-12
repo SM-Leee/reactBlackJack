@@ -1,0 +1,40 @@
+.card-deck {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .card {
+    width: 150px;
+    height: 230px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    margin: 10px;
+  }
+  
+  .card__suit {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .card__rank {
+    font-size: 40px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
+  
+  .card__info {
+    font-size: 16px;
+    color: #888;
+  }
+  
+  .card__red {
+    color: red;
+  }
